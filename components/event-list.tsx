@@ -86,13 +86,13 @@ function EventDetailSheet({ event, open, onOpenChange }: {
     <>
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent
-          className="w-[92vw] sm:w-[540px] sm:max-w-[540px] rounded-2xl p-0 my-3 mr-3 h-[calc(100vh-24px)] flex flex-col overflow-hidden"
+          className="w-[92vw] sm:w-[540px] sm:max-w-[540px] p-0 my-3 mr-3 h-[calc(100vh-24px)] flex flex-col overflow-hidden border-0"
+          style={{ borderRadius: "16px" }}
         >
-          {/* Color accent bar */}
-          <div className="h-2 w-full rounded-t-2xl flex-shrink-0" style={{ backgroundColor: borderColor }} />
+          <div className="h-2 w-full flex-shrink-0" style={{ backgroundColor: borderColor, borderRadius: "16px 16px 0 0" }} />
 
-          {/* Scrollable body */}
-          <div className="flex-1 overflow-y-auto p-7 space-y-6">
+          {/* Scrollable body — hidden scrollbar */}
+          <div className="flex-1 overflow-y-auto p-7 space-y-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <SheetHeader className="p-0">
               <div className="space-y-2">
                 <SheetTitle className="text-xl leading-snug">{event.name}</SheetTitle>
