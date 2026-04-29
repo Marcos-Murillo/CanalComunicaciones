@@ -5,10 +5,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CreateUserForm } from "@/components/create-user-form";
+import { UserCredentialsDialog } from "@/components/user-credentials-dialog";
+import { DeleteUserButton } from "@/components/delete-user-button";
 import { useUsers } from "@/hooks/use-users";
 
-function UserRow({ name, cedula, area, role, color }: {
-  name: string; cedula: string; area: string; role: string; color?: string;
+function UserRow({ id, name, cedula, area, role, color, password }: {
+  id: string; name: string; cedula: string; area: string; role: string; color?: string; password?: string;
 }) {
   return (
     <div className="flex items-center justify-between rounded-lg border bg-card p-3">
@@ -21,7 +23,11 @@ function UserRow({ name, cedula, area, role, color }: {
           <p className="text-xs text-muted-foreground">{area} · {cedula}</p>
         </div>
       </div>
-      <Badge variant="secondary" className="capitalize">{role}</Badge>
+      <div className="flex items-center gap-1">
+        <Badge variant="secondary" className="capitalize">{role}</Badge>
+        <UserCredentialsDialog name={name} cedula={cedula} password={password} />
+        <DeleteUserButton userId={id} userName={name} />
+      </div>
     </div>
   );
 }
@@ -59,7 +65,7 @@ export default function SuperAdminUsersPage() {
               <p className="text-sm text-muted-foreground text-center py-4">Sin usuarios aún</p>
             ) : (
               users.map((u) => (
-                <UserRow key={u.id} name={u.name} cedula={u.cedula} area={u.area} role={u.role} color={u.color} />
+                <UserRow key={u.id} id={u.id} name={u.name} cedula={u.cedula} area={u.area} role={u.role} color={u.color} password={u.password} />
               ))
             )}
           </CardContent>

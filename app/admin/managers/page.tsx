@@ -3,6 +3,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CreateUserForm } from "@/components/create-user-form";
+import { UserCredentialsDialog } from "@/components/user-credentials-dialog";
+import { DeleteUserButton } from "@/components/delete-user-button";
 import { useUsers } from "@/hooks/use-users";
 
 export default function AdminManagersPage() {
@@ -38,14 +40,20 @@ export default function AdminManagersPage() {
               <p className="text-sm text-muted-foreground text-center py-4">Sin managers aún</p>
             ) : (
               users.map((u) => (
-                <div key={u.id} className="flex items-center gap-3 rounded-lg border bg-card p-3">
-                  <div
-                    className="h-3 w-3 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: u.color ?? "#6b7280" }}
-                  />
-                  <div>
-                    <p className="text-sm font-medium">{u.name}</p>
-                    <p className="text-xs text-muted-foreground">{u.area} · {u.cedula}</p>
+                <div key={u.id} className="flex items-center justify-between rounded-lg border bg-card p-3">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="h-3 w-3 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: u.color ?? "#6b7280" }}
+                    />
+                    <div>
+                      <p className="text-sm font-medium">{u.name}</p>
+                      <p className="text-xs text-muted-foreground">{u.area} · {u.cedula}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <UserCredentialsDialog name={u.name} cedula={u.cedula} password={u.password} />
+                    <DeleteUserButton userId={u.id} userName={u.name} />
                   </div>
                 </div>
               ))

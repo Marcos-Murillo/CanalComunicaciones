@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Users, ShieldCheck, Menu, Moon, Sun, LogOut, LayoutDashboard } from "lucide-react";
+import { Users, ShieldCheck, Menu, Moon, Sun, LogOut, LayoutDashboard, ClipboardList, Settings } from "lucide-react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -11,9 +11,11 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { useAuth } from "@/lib/auth-context";
 
 const navItems = [
-  { href: "/superadmin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/superadmin", label: "Inicio", icon: LayoutDashboard },
   { href: "/superadmin/users", label: "Usuarios", icon: Users },
   { href: "/superadmin/admins", label: "Administradores", icon: ShieldCheck },
+  { href: "/superadmin/my-requests", label: "Mis Peticiones", icon: ClipboardList },
+  { href: "/superadmin/setup", label: "Configuración", icon: Settings },
 ];
 
 function NavLink({ href, label, icon: Icon, isActive, onClick }: {

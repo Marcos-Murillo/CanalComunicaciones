@@ -169,6 +169,7 @@ export async function createUser(data: {
       role: data.role,
       createdBy: data.createdBy,
       createdAt: Timestamp.now(),
+      password: data.password,
       ...(color ? { color } : {}),
     });
 

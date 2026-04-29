@@ -13,6 +13,7 @@ export interface AppUser {
   createdAt: Timestamp;
   // color asignado al manager para identificar sus eventos
   color?: string;
+  password?: string;
 }
 
 export interface Event {

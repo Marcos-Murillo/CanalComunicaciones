@@ -11,6 +11,7 @@ import {
   signOut,
 } from "@/lib/firebase";
 import type { AppUser } from "@/lib/types";
+import { Timestamp } from "firebase/firestore";
 
 interface AuthContextValue {
   user: AppUser | null;
@@ -23,6 +24,32 @@ const AuthContext = React.createContext<AuthContextValue>({
   loading: true,
   logout: async () => {},
 });
+
+function readSsoSession(): AppUser | null {
+  if (typeof document === "undefined") return null;
+  try {
+    const raw = document.cookie
+      .split("; ")
+      .find((c) => c.startsWith("canal_session="))
+      ?.split("=")[1];
+    if (!raw) return null;
+    const data = JSON.parse(atob(raw)) as {
+      uid: string; nombre: string; role: string; exp: number;
+    };
+    if (Date.now() > data.exp) return null;
+    return {
+      id: data.uid,
+      name: data.nombre,
+      cedula: data.uid,
+      area: "cultura",
+      role: data.role as AppUser["role"],
+      createdBy: "sso",
+      createdAt: Timestamp.now(),
+    };
+  } catch {
+    return null;
+  }
+}
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = React.useState<AppUser | null>(null);
@@ -39,7 +66,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(null);
         }
       } else {
-        setUser(null);
+        // fallback: check SSO session cookie
+        const ssoUser = readSsoSession();
+        setUser(ssoUser);
       }
       setLoading(false);
     });
@@ -48,6 +77,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = async () => {
     await signOut(auth);
+    // clear SSO cookie
+    document.cookie = "canal_session=; path=/; max-age=0";
     setUser(null);
     router.push("/login");
   };

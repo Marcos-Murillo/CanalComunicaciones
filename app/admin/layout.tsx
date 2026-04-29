@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Calendar, Users, Menu, Moon, Sun, LogOut } from "lucide-react";
+import { Calendar, Users, Menu, Moon, Sun, LogOut, Settings, ClipboardList, LayoutDashboard } from "lucide-react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -11,8 +11,11 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { useAuth } from "@/lib/auth-context";
 
 const navItems = [
+  { href: "/admin", label: "Inicio", icon: LayoutDashboard },
   { href: "/events", label: "Vista Eventos", icon: Calendar },
   { href: "/admin/managers", label: "Managers", icon: Users },
+  { href: "/admin/my-requests", label: "Mis Peticiones", icon: ClipboardList },
+  { href: "/admin/setup", label: "Configuración", icon: Settings },
 ];
 
 function NavLink({ href, label, icon: Icon, isActive, onClick }: {
