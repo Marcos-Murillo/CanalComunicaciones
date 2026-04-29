@@ -11,7 +11,6 @@ export interface AppUser {
   role: UserRole;
   createdBy: string;
   createdAt: Timestamp;
-  // color asignado al manager para identificar sus eventos
   color?: string;
   password?: string;
 }
@@ -23,12 +22,13 @@ export interface Event {
   plannedDate: Timestamp;
   schedule?: string;
   place?: string;
+  imageUrl?: string;
   status: EventStatus;
   rejectionReason?: string;
-  submittedBy: string;       // userId
-  submittedByName: string;   // nombre del manager
-  submittedByArea: string;   // área del manager
-  managerColor?: string;     // color del manager
+  submittedBy: string;
+  submittedByName: string;
+  submittedByArea: string;
+  managerColor?: string;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
@@ -59,5 +59,5 @@ export interface EventFormData {
   plannedDate: Date;
   schedule?: string;
   place?: string;
+  imageUrl?: string;
 }
-

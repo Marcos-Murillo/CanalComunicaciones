@@ -38,7 +38,7 @@ export default function EventsPage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Vista de Eventos</h1>
           <p className="text-muted-foreground">
-            Gestiona y da seguimiento a los eventos culturales
+            Eventos de la Sección CDR
           </p>
         </div>
 

@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import {
   Calendar, Clock, MapPin, MoreVertical,
-  MessageSquare, CheckCircle, XCircle, User, Building2,
+  MessageSquare, CheckCircle, XCircle, User, Building2, Download,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -117,6 +117,26 @@ export function EventCard({ event }: { event: Event }) {
 
         <CardContent className="space-y-3">
           <p className="text-sm text-muted-foreground line-clamp-2">{event.description}</p>
+
+          {/* Event image */}
+          {event.imageUrl && (
+            <div className="relative overflow-hidden rounded-md border">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={event.imageUrl} alt={event.name} className="w-full max-h-40 object-cover" />
+              {isAdmin && (
+                <a
+                  href={event.imageUrl}
+                  download
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-md bg-black/60 text-white transition-colors hover:bg-black/80"
+                  title="Descargar imagen"
+                >
+                  <Download className="h-4 w-4" />
+                </a>
+              )}
+            </div>
+          )}
 
           <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
             <div className="flex items-center gap-1.5">

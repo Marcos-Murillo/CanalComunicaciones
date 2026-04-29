@@ -33,6 +33,7 @@ export async function createEvent(
       plannedDate: Timestamp.fromDate(data.plannedDate),
       schedule: data.schedule || null,
       place: data.place || null,
+      imageUrl: data.imageUrl || null,
       status: "pending" as EventStatus,
       submittedBy: userId,
       submittedByName: userName,
