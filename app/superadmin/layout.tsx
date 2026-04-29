@@ -101,6 +101,15 @@ function SidebarContent({ onNavClick }: { onNavClick?: () => void }) {
 
 export default function SuperAdminLayout({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const { user, loading } = useAuth();
+
+  React.useEffect(() => {
+    if (!loading && !user) {
+      window.location.href = '/login';
+    }
+  }, [user, loading]);
+
+  if (loading || !user) return null;
 
   return (
     <div className="flex h-screen overflow-hidden">

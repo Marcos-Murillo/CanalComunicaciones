@@ -3,8 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Calendar, Users, Menu, Moon, Sun, LogOut, Settings, ClipboardList, LayoutDashboard } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Calendar, Users, Menu, Moon, Sun, LogOut, Settings, ClipboardList, LayoutDashboard } from "lucide-react";import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -90,6 +89,15 @@ function SidebarContent({ onNavClick }: { onNavClick?: () => void }) {
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const { user, loading } = useAuth();
+
+  React.useEffect(() => {
+    if (!loading && !user) {
+      window.location.href = '/login';
+    }
+  }, [user, loading]);
+
+  if (loading || !user) return null;
   return (
     <div className="flex h-screen overflow-hidden">
       <aside className="hidden w-64 md:flex flex-col">

@@ -35,7 +35,8 @@ export async function GET(req: NextRequest) {
     const nombre = (payload.nombre ?? '') as string
     const uid = (payload.uid ?? '') as string
 
-    const destination = redirectParam ?? ROLE_REDIRECTS[role] ?? '/submit'
+    // Always route by role — ignore redirect param to avoid CDR sending wrong paths
+    const destination = ROLE_REDIRECTS[role] ?? '/submit'
     const res = NextResponse.redirect(new URL(destination, req.url))
 
     res.cookies.set(SESSION_COOKIE, buildSession(uid, nombre, role), {
