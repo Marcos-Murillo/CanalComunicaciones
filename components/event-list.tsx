@@ -36,7 +36,9 @@ import type { Event } from "@/lib/types";
 // ── Event Detail Sheet ────────────────────────────────────────────────────
 
 function EventDetailSheet({ event, open, onOpenChange }: {
-  event: Event; open: boolean; onOpenChange: (v: boolean) => void;
+  event: Event;
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
 }) {
   const { user } = useAuth();
   const isAdmin = user?.role === "admin" || user?.role === "superadmin";
@@ -72,36 +74,43 @@ function EventDetailSheet({ event, open, onOpenChange }: {
     setSubmitting(true);
     const result = await updateEventStatus(event.id, "rejected", user?.name ?? "Admin", rejectionReason);
     setSubmitting(false);
-    if (result.success) { toast.success("Evento rechazado"); setRejectionReason(""); setRejectOpen(false); onOpenChange(false); }
-    else toast.error(result.error);
+    if (result.success) {
+      toast.success("Evento rechazado");
+      setRejectionReason("");
+      setRejectOpen(false);
+      onOpenChange(false);
+    } else toast.error(result.error);
   };
 
   return (
     <>
       <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
-          <SheetHeader className="pb-4">
-            <div className="flex items-start gap-3">
-              <div className="h-1 w-8 rounded-full mt-2 flex-shrink-0" style={{ backgroundColor: borderColor }} />
-              <div className="space-y-1">
-                <SheetTitle className="text-left">{event.name}</SheetTitle>
+        {/* Wide sheet with rounded corners and margin so it doesn't touch screen edges */}
+        <SheetContent
+          className="w-[92vw] sm:w-[540px] sm:max-w-[540px] rounded-l-2xl overflow-y-auto p-0 my-3 mr-3 h-[calc(100vh-24px)]"
+        >
+          {/* Color accent bar at top */}
+          <div className="h-2 w-full rounded-tl-2xl" style={{ backgroundColor: borderColor }} />
+
+          <div className="p-7 space-y-6">
+            <SheetHeader className="p-0">
+              <div className="space-y-2">
+                <SheetTitle className="text-xl leading-snug">{event.name}</SheetTitle>
                 <StatusBadge status={event.status} />
               </div>
-            </div>
-          </SheetHeader>
+            </SheetHeader>
 
-          <div className="space-y-5">
             {/* Image */}
             {event.imageUrl && (
-              <div className="relative overflow-hidden rounded-lg border">
+              <div className="relative overflow-hidden rounded-xl border">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={event.imageUrl} alt={event.name} className="w-full object-cover max-h-56" />
+                <img src={event.imageUrl} alt={event.name} className="w-full object-cover max-h-60" />
                 <a
                   href={event.imageUrl}
                   download
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-md bg-black/60 text-white hover:bg-black/80"
+                  className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-lg bg-black/60 text-white hover:bg-black/80 transition-colors"
                   title="Descargar imagen"
                 >
                   <Download className="h-4 w-4" />
@@ -110,43 +119,43 @@ function EventDetailSheet({ event, open, onOpenChange }: {
             )}
 
             {/* Description */}
-            <div>
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Descripción</p>
-              <p className="text-sm">{event.description}</p>
+            <div className="space-y-1.5">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Descripción</p>
+              <p className="text-sm leading-relaxed">{event.description}</p>
             </div>
 
             <Separator />
 
             {/* Details */}
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-sm">
-                <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 text-sm">
+                <Calendar className="h-5 w-5 text-blue-500 flex-shrink-0" />
                 <span>{format(plannedDate, "d 'de' MMMM, yyyy", { locale: es })}</span>
               </div>
               {event.schedule && (
-                <div className="flex items-center gap-2 text-sm">
-                  <Clock className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                <div className="flex items-center gap-3 text-sm">
+                  <Clock className="h-5 w-5 text-violet-500 flex-shrink-0" />
                   <span>{event.schedule}</span>
                 </div>
               )}
               {event.place && (
-                <div className="flex items-center gap-2 text-sm">
-                  <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                <div className="flex items-center gap-3 text-sm">
+                  <MapPin className="h-5 w-5 text-rose-500 flex-shrink-0" />
                   <span>{event.place}</span>
                 </div>
               )}
-              <div className="flex items-center gap-2 text-sm">
-                <User className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                <span style={{ color: borderColor }} className="font-medium">{event.submittedByName}</span>
+              <div className="flex items-center gap-3 text-sm">
+                <User className="h-5 w-5 text-emerald-500 flex-shrink-0" />
+                <span style={{ color: borderColor }} className="font-semibold">{event.submittedByName}</span>
               </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Building2 className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+              <div className="flex items-center gap-3 text-sm">
+                <Building2 className="h-5 w-5 text-amber-500 flex-shrink-0" />
                 <span>{event.submittedByArea}</span>
               </div>
             </div>
 
             {event.status === "rejected" && event.rejectionReason && (
-              <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+              <div className="rounded-xl bg-destructive/10 p-4 text-sm text-destructive">
                 <strong>Motivo del rechazo:</strong> {event.rejectionReason}
               </div>
             )}
@@ -155,29 +164,29 @@ function EventDetailSheet({ event, open, onOpenChange }: {
             {isAdmin && (
               <>
                 <Separator />
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 pb-2">
                   <Button
                     variant="outline"
-                    className="w-full justify-start gap-2"
+                    className="w-full justify-start gap-3 h-11 text-base"
                     onClick={() => setCommentOpen(true)}
                   >
-                    <MessageSquare className="h-4 w-4" /> Comentar
+                    <MessageSquare className="h-5 w-5 text-blue-500" /> Comentar
                   </Button>
                   <Button
                     variant="outline"
-                    className="w-full justify-start gap-2"
+                    className="w-full justify-start gap-3 h-11 text-base"
                     disabled={event.status === "completed" || submitting}
                     onClick={handleMarkCompleted}
                   >
-                    <CheckCircle className="h-4 w-4 text-success" /> Marcar como realizado
+                    <CheckCircle className="h-5 w-5 text-emerald-500" /> Marcar como realizado
                   </Button>
                   <Button
                     variant="outline"
-                    className="w-full justify-start gap-2 text-destructive hover:text-destructive"
+                    className="w-full justify-start gap-3 h-11 text-base text-destructive hover:text-destructive"
                     disabled={event.status === "rejected" || submitting}
                     onClick={() => setRejectOpen(true)}
                   >
-                    <XCircle className="h-4 w-4" /> Rechazar
+                    <XCircle className="h-5 w-5 text-destructive" /> Rechazar
                   </Button>
                 </div>
               </>
@@ -229,24 +238,27 @@ function EventDetailSheet({ event, open, onOpenChange }: {
 
 function EventRow({ event }: { event: Event }) {
   const [detailOpen, setDetailOpen] = React.useState(false);
+  const plannedDate = event.plannedDate.toDate();
 
   return (
     <>
       <tr className="border-b transition-colors hover:bg-muted/40">
-        <td className="px-4 py-3 text-sm font-medium" style={{ color: event.managerColor ?? undefined }}>
+        <td className="px-4 py-3 text-sm font-semibold" style={{ color: event.managerColor ?? undefined }}>
           {event.submittedByName}
         </td>
         <td className="px-4 py-3 text-sm text-muted-foreground">{event.submittedByArea}</td>
         <td className="px-4 py-3 text-sm font-medium">{event.name}</td>
+        <td className="px-4 py-3 text-sm text-muted-foreground whitespace-nowrap">
+          {format(plannedDate, "d MMM yyyy", { locale: es })}
+        </td>
         <td className="px-4 py-3">
           <StatusBadge status={event.status} />
         </td>
         <td className="px-4 py-3 text-center">
-          {event.imageUrl ? (
-            <Check className="h-4 w-4 text-success mx-auto" />
-          ) : (
-            <X className="h-4 w-4 text-muted-foreground mx-auto" />
-          )}
+          {event.imageUrl
+            ? <Check className="h-4 w-4 text-emerald-500 mx-auto" />
+            : <X className="h-4 w-4 text-muted-foreground/50 mx-auto" />
+          }
         </td>
         <td className="px-4 py-3 text-right">
           <DropdownMenu>
@@ -310,9 +322,10 @@ export function EventsList() {
     if (search) {
       const q = search.toLowerCase();
       result = result.filter(
-        (e) => e.name.toLowerCase().includes(q) ||
-               e.submittedByName.toLowerCase().includes(q) ||
-               e.submittedByArea.toLowerCase().includes(q)
+        (e) =>
+          e.name.toLowerCase().includes(q) ||
+          e.submittedByName.toLowerCase().includes(q) ||
+          e.submittedByArea.toLowerCase().includes(q)
       );
     }
     return result;
@@ -324,8 +337,8 @@ export function EventsList() {
       Persona: e.submittedByName,
       Area: e.submittedByArea,
       Evento: e.name,
-      Estado: e.status,
       Fecha: format(e.plannedDate.toDate(), "dd/MM/yyyy", { locale: es }),
+      Estado: e.status,
       Horario: e.schedule || "",
       Lugar: e.place || "",
       Imagen: e.imageUrl ? "Sí" : "No",
@@ -380,7 +393,7 @@ export function EventsList() {
           <p className="mt-4 text-sm text-muted-foreground">No hay eventos registrados</p>
         </div>
       ) : (
-        <div className="rounded-lg border overflow-hidden">
+        <div className="rounded-xl border overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -388,6 +401,7 @@ export function EventsList() {
                   <th className="px-4 py-3 text-left font-medium text-muted-foreground">Persona</th>
                   <th className="px-4 py-3 text-left font-medium text-muted-foreground">Área</th>
                   <th className="px-4 py-3 text-left font-medium text-muted-foreground">Evento</th>
+                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">Fecha</th>
                   <th className="px-4 py-3 text-left font-medium text-muted-foreground">Estado</th>
                   <th className="px-4 py-3 text-center font-medium text-muted-foreground">
                     <ImageIcon className="h-4 w-4 mx-auto" />
