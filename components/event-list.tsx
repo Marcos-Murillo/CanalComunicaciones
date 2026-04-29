@@ -85,14 +85,14 @@ function EventDetailSheet({ event, open, onOpenChange }: {
   return (
     <>
       <Sheet open={open} onOpenChange={onOpenChange}>
-        {/* Wide sheet with rounded corners and margin so it doesn't touch screen edges */}
         <SheetContent
-          className="w-[92vw] sm:w-[540px] sm:max-w-[540px] rounded-l-2xl overflow-y-auto p-0 my-3 mr-3 h-[calc(100vh-24px)]"
+          className="w-[92vw] sm:w-[540px] sm:max-w-[540px] rounded-2xl p-0 my-3 mr-3 h-[calc(100vh-24px)] flex flex-col overflow-hidden"
         >
-          {/* Color accent bar at top */}
-          <div className="h-2 w-full rounded-tl-2xl" style={{ backgroundColor: borderColor }} />
+          {/* Color accent bar */}
+          <div className="h-2 w-full rounded-t-2xl flex-shrink-0" style={{ backgroundColor: borderColor }} />
 
-          <div className="p-7 space-y-6">
+          {/* Scrollable body */}
+          <div className="flex-1 overflow-y-auto p-7 space-y-6">
             <SheetHeader className="p-0">
               <div className="space-y-2">
                 <SheetTitle className="text-xl leading-snug">{event.name}</SheetTitle>
@@ -104,7 +104,7 @@ function EventDetailSheet({ event, open, onOpenChange }: {
             {event.imageUrl && (
               <div className="relative overflow-hidden rounded-xl border">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={event.imageUrl} alt={event.name} className="w-full object-cover max-h-60" />
+                <img src={event.imageUrl} alt={event.name} className="w-full object-cover max-h-56" />
                 <a
                   href={event.imageUrl}
                   download
@@ -126,32 +126,49 @@ function EventDetailSheet({ event, open, onOpenChange }: {
 
             <Separator />
 
-            {/* Details */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-3 text-sm">
-                <Calendar className="h-5 w-5 text-blue-500 flex-shrink-0" />
-                <span>{format(plannedDate, "d 'de' MMMM, yyyy", { locale: es })}</span>
-              </div>
-              {event.schedule && (
-                <div className="flex items-center gap-3 text-sm">
-                  <Clock className="h-5 w-5 text-violet-500 flex-shrink-0" />
-                  <span>{event.schedule}</span>
+            {/* Details grid: 2x2 + 1 */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex items-center gap-2 rounded-lg bg-muted/50 px-3 py-2.5">
+                <Calendar className="h-4 w-4 text-blue-500 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Fecha</p>
+                  <p className="text-xs font-medium truncate">{format(plannedDate, "d MMM yyyy", { locale: es })}</p>
                 </div>
-              )}
+              </div>
+
+              <div className="flex items-center gap-2 rounded-lg bg-muted/50 px-3 py-2.5">
+                <Clock className="h-4 w-4 text-violet-500 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Horario</p>
+                  <p className="text-xs font-medium truncate">{event.schedule || "—"}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 rounded-lg bg-muted/50 px-3 py-2.5">
+                <User className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Persona</p>
+                  <p className="text-xs font-semibold truncate" style={{ color: borderColor }}>{event.submittedByName}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 rounded-lg bg-muted/50 px-3 py-2.5">
+                <Building2 className="h-4 w-4 text-amber-500 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Área</p>
+                  <p className="text-xs font-medium truncate">{event.submittedByArea}</p>
+                </div>
+              </div>
+
               {event.place && (
-                <div className="flex items-center gap-3 text-sm">
-                  <MapPin className="h-5 w-5 text-rose-500 flex-shrink-0" />
-                  <span>{event.place}</span>
+                <div className="col-span-2 flex items-center gap-2 rounded-lg bg-muted/50 px-3 py-2.5">
+                  <MapPin className="h-4 w-4 text-rose-500 flex-shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Lugar</p>
+                    <p className="text-xs font-medium truncate">{event.place}</p>
+                  </div>
                 </div>
               )}
-              <div className="flex items-center gap-3 text-sm">
-                <User className="h-5 w-5 text-emerald-500 flex-shrink-0" />
-                <span style={{ color: borderColor }} className="font-semibold">{event.submittedByName}</span>
-              </div>
-              <div className="flex items-center gap-3 text-sm">
-                <Building2 className="h-5 w-5 text-amber-500 flex-shrink-0" />
-                <span>{event.submittedByArea}</span>
-              </div>
             </div>
 
             {event.status === "rejected" && event.rejectionReason && (
@@ -165,27 +182,13 @@ function EventDetailSheet({ event, open, onOpenChange }: {
               <>
                 <Separator />
                 <div className="flex flex-col gap-2 pb-2">
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start gap-3 h-11 text-base"
-                    onClick={() => setCommentOpen(true)}
-                  >
+                  <Button variant="outline" className="w-full justify-start gap-3 h-11" onClick={() => setCommentOpen(true)}>
                     <MessageSquare className="h-5 w-5 text-blue-500" /> Comentar
                   </Button>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start gap-3 h-11 text-base"
-                    disabled={event.status === "completed" || submitting}
-                    onClick={handleMarkCompleted}
-                  >
+                  <Button variant="outline" className="w-full justify-start gap-3 h-11" disabled={event.status === "completed" || submitting} onClick={handleMarkCompleted}>
                     <CheckCircle className="h-5 w-5 text-emerald-500" /> Marcar como realizado
                   </Button>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start gap-3 h-11 text-base text-destructive hover:text-destructive"
-                    disabled={event.status === "rejected" || submitting}
-                    onClick={() => setRejectOpen(true)}
-                  >
+                  <Button variant="outline" className="w-full justify-start gap-3 h-11 text-destructive hover:text-destructive" disabled={event.status === "rejected" || submitting} onClick={() => setRejectOpen(true)}>
                     <XCircle className="h-5 w-5 text-destructive" /> Rechazar
                   </Button>
                 </div>
